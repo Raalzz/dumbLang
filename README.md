@@ -17,6 +17,7 @@ paste the below content
 
 ```
 foo := 3
+bar := 1+2*3
 print foo
 
 ```
@@ -27,4 +28,9 @@ After that open the terminal and run below command
 node run.js foo.dumb
 ```
 
-It shoud print 3 as the result
+It shoud print the result as
+```
+3
+7
+
+```
