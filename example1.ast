@@ -1,0 +1,39 @@
+[
+ {
+  "type": "var_assignment",
+  "varname": "n",
+  "value": 1
+ },
+ {
+  "type": "var_assignment",
+  "varname": "m",
+  "value": 2
+ },
+ {
+  "type": "var_assignment",
+  "varname": "o",
+  "value": {
+   "type": "binary_expression",
+   "left": "m",
+   "operator": "+",
+   "right": {
+    "type": "binary_expression",
+    "left": "n",
+    "operator": "*",
+    "right": 3
+   }
+  }
+ },
+ {
+  "type": "print_statement",
+  "expression": "m"
+ },
+ {
+  "type": "print_statement",
+  "expression": "n"
+ },
+ {
+  "type": "print_statement",
+  "expression": "o"
+ }
+]

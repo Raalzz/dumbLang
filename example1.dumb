@@ -1,0 +1,6 @@
+n := 1
+m := 2
+o := m + n * 3
+print m
+print n
+print o
