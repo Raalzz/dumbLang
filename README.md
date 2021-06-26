@@ -27,4 +27,4 @@ After that open the terminal and run below command
 node run.js foo.dumb
 ```
 
-It shoud prunt 3 as the result
+It shoud print 3 as the result
