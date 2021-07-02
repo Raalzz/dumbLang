@@ -19,6 +19,7 @@ paste the below content
 foo := 3
 bar := 1+2*3
 print foo
+print bar
 
 ```
 
