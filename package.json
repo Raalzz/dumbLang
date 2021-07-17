@@ -1,7 +1,7 @@
 {
   "name": "dumb_lang",
   "version": "1.0.0",
-  "description": "",
+  "description": "Simple transpiler which takes grammer from dumb.grammar file and tanspiles it to javascript",
   "main": "index.js",
   "scripts": {
     "gen-parser": "nearleyc dumb.grammar -o dumb.js"
@@ -10,7 +10,6 @@
   "author": "Rahul Sawant <rahulsawanth06@gmail.com> (https://raalzz.com)",
   "license": "ISC",
   "dependencies": {
-    "mz": "^2.7.0",
     "nearley": "^2.20.1"
   }
 }
