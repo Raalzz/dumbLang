@@ -1,16 +1,3 @@
-const fs = require("mz/fs");
-const path = require("path");
-
-async function main() {
-  const filename = process.argv[2];
-  const outputFilename = path.basename(filename, ".ast") + ".js";
-  const contents = (await fs.readFile(filename)).toString();
-  const ast = JSON.parse(contents);
-  const jsCode = generateJS(ast, []);
-  await fs.writeFile(outputFilename, jsCode);
-  console.log(`Wrote ${outputFilename}.`);
-}
-
 function generateJS(statements, declaredVariables) {
   const lines = [];
   for (let statement of statements) {
@@ -70,5 +57,13 @@ function generateJSForExpression(expression, declaredVariables) {
     return expression;
   }
 }
+async function generator(ASTCode) {
+  try {
+    const jsCode = generateJS(ASTCode, []);
+    return jsCode;
+  } catch (e) {
+    console.log(`generator Failed ${e.message}`);
+  }
+}
 
-main();
+module.exports = generator;
