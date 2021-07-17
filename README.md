@@ -12,7 +12,7 @@ Currently the Grammar Only Handels:
 
 ## To try:
 
-Create a file called foo.dumb
+Create a file in called src/foo.dumb
 paste the below content
 
 ```
@@ -26,7 +26,7 @@ print bar
 After that open the terminal and run below command
 
 ```
-node run.js foo.dumb
+node index.js foo.dumb
 ```
 
 It shoud print the result as
