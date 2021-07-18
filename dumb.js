@@ -15,6 +15,7 @@ var grammar = {
     {"name": "statement", "symbols": ["var_assignment"], "postprocess": id},
     {"name": "statement", "symbols": ["print_statement"], "postprocess": id},
     {"name": "statement", "symbols": ["while_loop"], "postprocess": id},
+    {"name": "statement", "symbols": ["if_statement"], "postprocess": id},
     {"name": "while_loop$string$1", "symbols": [{"literal":"w"}, {"literal":"h"}, {"literal":"i"}, {"literal":"l"}, {"literal":"e"}], "postprocess": function joiner(d) {return d.join('');}},
     {"name": "while_loop", "symbols": ["while_loop$string$1", "__", "binary_expression", "_", {"literal":"["}, "_", {"literal":"\n"}, "statements", {"literal":"\n"}, "_", {"literal":"]"}], "postprocess": 
         data => {
@@ -25,6 +26,42 @@ var grammar = {
             }
         }
                 },
+    {"name": "if_statement$string$1", "symbols": [{"literal":"i"}, {"literal":"f"}], "postprocess": function joiner(d) {return d.join('');}},
+    {"name": "if_statement", "symbols": ["if_statement$string$1", "__", "binary_expression", "_", {"literal":"["}, "_", {"literal":"\n"}, "statements", {"literal":"\n"}, "_", {"literal":"]"}, "_", "elif_statement", "_", "else_statement"], "postprocess": 
+        data => {
+          
+            return {
+                type: "if_statement",
+                condition: data[2],
+                body: data[7],
+                elifBody: data[12],
+                else: data[14]
+            }
+        }
+                },
+    {"name": "elif_statement", "symbols": []},
+    {"name": "elif_statement$string$1", "symbols": [{"literal":"e"}, {"literal":"l"}, {"literal":"i"}, {"literal":"f"}], "postprocess": function joiner(d) {return d.join('');}},
+    {"name": "elif_statement", "symbols": ["elif_statement$string$1", "__", "binary_expression", "_", {"literal":"["}, "_", {"literal":"\n"}, "statements", {"literal":"\n"}, "_", {"literal":"]"}], "postprocess":  
+        data => {
+            return  [{
+                    condition: data[2],
+                    body: data[7]
+                }]   
+        }
+            },
+    {"name": "elif_statement$string$2", "symbols": [{"literal":"e"}, {"literal":"l"}, {"literal":"i"}, {"literal":"f"}], "postprocess": function joiner(d) {return d.join('');}},
+    {"name": "elif_statement", "symbols": ["elif_statement", "_", "elif_statement$string$2", "_", "binary_expression", "_", {"literal":"["}, "_", {"literal":"\n"}, "statements", {"literal":"\n"}, "_", {"literal":"]"}], "postprocess":  
+        data => {
+           return  [...(data[0]), { condition: data[4], body: data[9]} ]
+        }
+            },
+    {"name": "else_statement", "symbols": []},
+    {"name": "else_statement$string$1", "symbols": [{"literal":"e"}, {"literal":"l"}, {"literal":"s"}, {"literal":"e"}], "postprocess": function joiner(d) {return d.join('');}},
+    {"name": "else_statement", "symbols": ["else_statement$string$1", "_", {"literal":"["}, {"literal":"\n"}, "statements", {"literal":"\n"}, "_", {"literal":"]"}], "postprocess":  
+        data => {
+            return data[4]
+        }
+        },
     {"name": "print_statement$string$1", "symbols": [{"literal":"p"}, {"literal":"r"}, {"literal":"i"}, {"literal":"n"}, {"literal":"t"}], "postprocess": function joiner(d) {return d.join('');}},
     {"name": "print_statement", "symbols": ["print_statement$string$1", "__", "expression"], "postprocess": 
         data => {
@@ -86,10 +123,10 @@ var grammar = {
         data => data[0].join("")
         },
     {"name": "_$ebnf$1", "symbols": []},
-    {"name": "_$ebnf$1", "symbols": ["_$ebnf$1", /[ ]/], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
+    {"name": "_$ebnf$1", "symbols": ["_$ebnf$1", /[^\S]/], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
     {"name": "_", "symbols": ["_$ebnf$1"]},
-    {"name": "__$ebnf$1", "symbols": [/[ ]/]},
-    {"name": "__$ebnf$1", "symbols": ["__$ebnf$1", /[ ]/], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
+    {"name": "__$ebnf$1", "symbols": [/[^\S]/]},
+    {"name": "__$ebnf$1", "symbols": ["__$ebnf$1", /[^\S]/], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
     {"name": "__", "symbols": ["__$ebnf$1"]}
 ]
   , ParserStart: "program"

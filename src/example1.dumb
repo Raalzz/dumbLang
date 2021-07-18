@@ -4,3 +4,6 @@ o := m + n * 3
 print m
 print n
 print o
+if 3 > 4 [
+  print n
+]
