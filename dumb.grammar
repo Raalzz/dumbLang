@@ -12,6 +12,7 @@ statement
     -> var_assignment {% id %}
     | print_statement {% id %}
     | while_loop {% id %}
+    | if_statement {% id %}
 
 while_loop -> "while" __ binary_expression _ "[" _ "\n" statements "\n" _ "]" {%
             data => {
@@ -22,6 +23,41 @@ while_loop -> "while" __ binary_expression _ "[" _ "\n" statements "\n" _ "]" {%
                 }
             }
         %}
+
+if_statement -> "if" __ binary_expression _ "[" _ "\n" statements "\n" _ "]" _ elif_statement _ else_statement {%
+            data => {
+              
+                return {
+                    type: "if_statement",
+                    condition: data[2],
+                    body: data[7],
+                    elifBody: data[12],
+                    else: data[14]
+                }
+            }
+        %}
+
+elif_statement -> null 
+    |"elif" __ binary_expression _ "[" _ "\n" statements "\n" _ "]" {% 
+            data => {
+                return  [{
+                        condition: data[2],
+                        body: data[7]
+                    }]   
+            }
+    %}
+    | elif_statement _ "elif" _ binary_expression _ "[" _ "\n" statements "\n" _ "]" {% 
+            data => {
+               return  [...(data[0]), { condition: data[4], body: data[9]} ]
+            }
+    %}
+    
+
+else_statement ->  null | "else" _ "[" "\n" statements "\n" _ "]" {% 
+            data => {
+                return data[4]
+            }
+%}
 
 print_statement -> "print" __ expression {%
             data => {
@@ -89,6 +125,6 @@ digits -> [0-9]:+ {%
         data => data[0].join("")
 %}
 
-_ -> [ ]:*
+_ -> [^\S]:*
 
-__ -> [ ]:+
+__ -> [^\S]:+

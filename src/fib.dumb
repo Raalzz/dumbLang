@@ -9,3 +9,6 @@ while i <= n [
   fii := temp
   i := i + 1
 ]
+if i <= n [
+  print i
+]
