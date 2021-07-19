@@ -63,7 +63,7 @@ var grammar = {
         }
         },
     {"name": "print_statement$string$1", "symbols": [{"literal":"p"}, {"literal":"r"}, {"literal":"i"}, {"literal":"n"}, {"literal":"t"}], "postprocess": function joiner(d) {return d.join('');}},
-    {"name": "print_statement", "symbols": ["print_statement$string$1", "__", "expression"], "postprocess": 
+    {"name": "print_statement", "symbols": ["print_statement$string$1", "__", "printable"], "postprocess": 
         data => {
             return {
                 type: "print_statement",
@@ -71,6 +71,14 @@ var grammar = {
             }
         }
                 },
+    {"name": "printable", "symbols": []},
+    {"name": "printable", "symbols": ["expression"]},
+    {"name": "printable", "symbols": ["string"]},
+    {"name": "printable", "symbols": ["printable", "_", {"literal":","}, "_", "printable"], "postprocess":  
+        data => {
+            return [...(data[0]), ...data[4]]
+        }
+            },
     {"name": "expression", "symbols": ["unary_expression"], "postprocess": id},
     {"name": "expression", "symbols": ["binary_expression"], "postprocess": id},
     {"name": "unary_expression", "symbols": ["number"], "postprocess": id},
@@ -122,6 +130,11 @@ var grammar = {
     {"name": "digits", "symbols": ["digits$ebnf$1"], "postprocess": 
         data => data[0].join("")
         },
+    {"name": "string", "symbols": [{"literal":"\""}, "_string", {"literal":"\""}], "postprocess": function(d) {return {type: 'literal', value: d[1]};}},
+    {"name": "_string", "symbols": [], "postprocess": function() {return ""; }},
+    {"name": "_string", "symbols": ["_string", "_stringchar"], "postprocess": function(d) {return d[0] + d[1];}},
+    {"name": "_stringchar", "symbols": [/[^\\"]/], "postprocess": id},
+    {"name": "_stringchar", "symbols": [{"literal":"\\"}, /[^]/], "postprocess": function(d) {return JSON.parse("\"" + d[0] + d[1] + "\""); }},
     {"name": "_$ebnf$1", "symbols": []},
     {"name": "_$ebnf$1", "symbols": ["_$ebnf$1", /[^\S]/], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
     {"name": "_", "symbols": ["_$ebnf$1"]},

@@ -19,6 +19,9 @@ function generateJSForExpression(expression, declaredVariables) {
       );
       const operator = operatorMap[expression.operator];
       return `${left} ${operator} ${right}`;
+    } 
+    if(expression.type === "literal") {
+      return `\"${expression.value}\"`;
     }
   } else {
     //identifier or number
@@ -41,10 +44,13 @@ function varAssignment(statement, declaredVariables) {
 
 // handle print statement
 function printStatement(statement, declaredVariables) {
-  return `console.log(${generateJSForExpression(
-    statement.expression,
-    declaredVariables
-  )})`;
+  const arguments = statement.expression.map((arg) => {
+    if(typeof arg === "object" ) {
+      return generateJSForExpression(arg, declaredVariables);
+    } 
+    return arg;
+  });
+  return `console.log(${arguments})`;
 }
 
 // handle while loop
