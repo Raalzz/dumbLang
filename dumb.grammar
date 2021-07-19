@@ -59,7 +59,7 @@ else_statement ->  null | "else" _ "[" "\n" statements "\n" _ "]" {%
             }
 %}
 
-print_statement -> "print" __ expression {%
+print_statement -> "print" __ printable {%
             data => {
                 return {
                     type: "print_statement",
@@ -67,6 +67,15 @@ print_statement -> "print" __ expression {%
                 }
             }
         %}
+
+printable -> null
+    | expression
+    | string 
+    | printable _ "," _ printable {% 
+            data => {
+                return [...(data[0]), ...data[4]]
+            }
+    %}
 
 expression
         -> unary_expression {% id %}
@@ -124,6 +133,16 @@ number
 digits -> [0-9]:+ {%
         data => data[0].join("")
 %}
+
+string -> "\"" _string "\"" {% function(d) {return {type: 'literal', value: d[1]};} %}
+ 
+_string ->
+	null {% function() {return ""; } %}
+	| _string _stringchar {% function(d) {return d[0] + d[1];} %}
+ 
+_stringchar ->
+	[^\\"] {% id %}
+	| "\\" [^] {% function(d) {return JSON.parse("\"" + d[0] + d[1] + "\""); } %}
 
 _ -> [^\S]:*
 

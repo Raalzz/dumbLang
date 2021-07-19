@@ -12,10 +12,12 @@ async function main() {
     }
     return data;
   });
-  const AST = await parser(dumbCode);
+
+  const AST = await parser(dumbCode).catch((e) => {
+    console.log("error", e);
+  });
 
   const result = await generator(AST);
-
   exec(`echo '${result}' | node`, (stdin, stdout, stderr) => {
     console.log(stdout);
   });
