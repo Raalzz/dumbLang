@@ -9,6 +9,8 @@ Currently the Grammar Only Handels:
 - Numbers
 - White space
 - Simple while loop
+- if else statements
+- print statements
 
 ## To try:
 
